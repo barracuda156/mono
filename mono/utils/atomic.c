@@ -508,7 +508,11 @@ void mono_atomic_store_ptr(volatile gpointer *dst, gpointer val)
 gint64
 mono_atomic_cas_i64(volatile gint64 *dest, gint64 exch, gint64 comp)
 {
+#if defined(__ppc__) /* __sync* builtins do not link on PPC, use newer __atomic* ones. */
+	return gcc_atomic_compare_exchange_n (dest, comp, exch, false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
+#else
 	return gcc_sync_val_compare_and_swap (dest, comp, exch);
+#endif
 }
 
 #elif defined (__arm__) && defined (HAVE_ARMV7) && (defined(TARGET_IOS) || defined(TARGET_WATCHOS) || defined(TARGET_ANDROID))
