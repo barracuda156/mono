@@ -499,6 +499,8 @@ void mono_atomic_store_ptr(volatile gpointer *dst, gpointer val)
 
 #if defined (TARGET_OSX)
 
+#include <stdbool.h>
+
 #ifdef MONO_ATOMIC_USES_LOCK
 #error MONO_ATOMIC_USES_LOCK defined
 #endif
